@@ -51,7 +51,6 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.IOIOLooperProvider;
 import ioio.lib.util.android.IOIOAndroidApplicationHelper;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -70,6 +69,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Main_activity extends Activity implements IOIOLooperProvider, SensorEventListener, ConnectionCallbacks, OnConnectionFailedListener,
@@ -164,7 +164,15 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 	boolean tiltingUp = false;
 	int panInc;
 	int tiltInc;
-	
+
+
+	TextView response;
+	Button buttonConnect, buttonClear;
+	Server server;
+	TextView infoip, msg;
+	String phoneIpAddress = "169.234." + "17.229";
+
+
 	// called to use OpenCV libraries contained within the app as opposed to a separate download
 	static {
 		if (!OpenCVLoader.initDebug()) {
@@ -181,8 +189,9 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 		setContentView(R.layout.main);
 		
 		helper_.create(); // from IOIOActivity
-		
-		//set up opencv camera
+
+
+	//set up opencv camera
 		mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.color_blob_detection_activity_surface_view);
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		mOpenCvCameraView.enableView();
@@ -194,22 +203,28 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 		distanceText = (TextView) findViewById(R.id.distanceText);
 		bearingText = (TextView) findViewById(R.id.bearingText);
 		headingText = (TextView) findViewById(R.id.headingText);
-		
+
+
+
 		//add functionality to autoMode button
 		Button buttonAuto = (Button) findViewById(R.id.btnAuto);
 		buttonAuto.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (!autoMode) {
-					v.setBackgroundResource(R.drawable.button_auto_on);
+					v.setBackgroundResource(R.drawable.button_auto_on); //on so red button
 					autoMode = true;
 					startTime = System.currentTimeMillis();
-				} else {
+				}
+					else {
 					v.setBackgroundResource(R.drawable.button_auto_off);
 					autoMode = false;
 				}
 			}
 		});
-		
+
+
+
+
 		//set starting autoMode button color
 		if (autoMode) {
 			buttonAuto.setBackgroundResource(R.drawable.button_auto_on);
@@ -488,6 +503,8 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 		curr_lat = curr_loc.getLatitude();
 		curr_lon = curr_loc.getLongitude();
 		String info = text + ", Lat:" + curr_lat + ", Lon:" + curr_lon + ", Time:" + time;
+
+
 		try {
 			File newFolder = new File(Environment.getExternalStorageDirectory(), "RescueRobotics_Heat2");
 			if (!newFolder.exists()) {
@@ -895,7 +912,18 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 		  });
 	}
 
-	/****************************************************** functions from IOIOActivity *********************************************************************************/
+
+
+
+	/***************************************************** function to send to master ***********************************************************/
+	String gpstoMaster = "Empty";
+	String send_to_M () {
+		//REPLACE ## later w/ curr_loc.getLatitude & curr_loc.getLongitude
+		return gpstoMaster = "GPS[LAT:" + curr_lat + ", LON:" + curr_lon + "]";
+		//gpstoMaster = gpstoMaster + "GPS[LAT:" + curr_lat + ", LON:" + curr_lon + "], ";
+	}
+
+		/****************************************************** functions from IOIOActivity *********************************************************************************/
 
 	/**
 	 * Create the {@link IOIO_thread}. Called by the
@@ -917,6 +945,7 @@ public class Main_activity extends Activity implements IOIOLooperProvider, Senso
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		server.onDestroy();
 		Log.i("activity cycle","main activity being destroyed");
 		helper_.destroy();
 		if (mOpenCvCameraView != null)

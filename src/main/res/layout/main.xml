@@ -34,14 +34,56 @@
         android:text="@string/sonar2" />
     
     <Button
-        android:id="@+id/btnAuto"
+    android:id="@+id/btnAuto"
+    android:layout_width="@dimen/command_button_size"
+    android:layout_height="@dimen/command_button_size"
+    android:background="@drawable/button_auto"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true" />
+
+    TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:autoLink="web"
+    android:text="http://androidSRC.net/"
+    android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/connectButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Recieve from Master" />
+
+    <TextView
+        android:id="@+id/responseTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/infoip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/open_activity_button"
         android:layout_width="@dimen/command_button_size"
         android:layout_height="@dimen/command_button_size"
-        android:layout_margin="@dimen/command_button_margin"
-        android:background="@drawable/button_auto"
+        android:background="@drawable/start_stop"
         android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"/>
+        android:layout_alignParentLeft="true" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
+        <TextView
+            android:id="@+id/msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </ScrollView>
     <TextView
         android:id="@+id/sonar1"
         android:layout_width="wrap_content"
